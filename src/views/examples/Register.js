@@ -1,22 +1,4 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.1
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// reactstrap components
+import { useState } from 'react';
 import {
   Button,
   Card,
@@ -30,9 +12,26 @@ import {
   InputGroup,
   Row,
   Col,
-} from "reactstrap";
+} from 'reactstrap';
+
+import AuthService from '../../services/AuthService';
 
 const Register = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleOnSubmit = async () => {
+    try {
+      const response = await AuthService.registration(email, password);
+      console.log(response);
+
+      localStorage.setItem('token', response.data.accessToken);
+    } catch (error) {
+      //   console.log(error.response.data.message);
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Col lg="6" md="8">
@@ -52,7 +51,7 @@ const Register = () => {
                   <img
                     alt="..."
                     src={
-                      require("../../assets/img/icons/common/github.svg")
+                      require('../../assets/img/icons/common/github.svg')
                         .default
                     }
                   />
@@ -69,7 +68,7 @@ const Register = () => {
                   <img
                     alt="..."
                     src={
-                      require("../../assets/img/icons/common/google.svg")
+                      require('../../assets/img/icons/common/google.svg')
                         .default
                     }
                   />
@@ -82,7 +81,7 @@ const Register = () => {
             <div className="text-center text-muted mb-4">
               <small>Or sign up with credentials</small>
             </div>
-            <Form role="form">
+            <Form role="form" onSubmit={handleOnSubmit}>
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -104,6 +103,8 @@ const Register = () => {
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </InputGroup>
               </FormGroup>
@@ -118,12 +119,14 @@ const Register = () => {
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </InputGroup>
               </FormGroup>
               <div className="text-muted font-italic">
                 <small>
-                  password strength:{" "}
+                  password strength:{' '}
                   <span className="text-success font-weight-700">strong</span>
                 </small>
               </div>
@@ -140,7 +143,7 @@ const Register = () => {
                       htmlFor="customCheckRegister"
                     >
                       <span className="text-muted">
-                        I agree with the{" "}
+                        I agree with the{' '}
                         <a href="#pablo" onClick={(e) => e.preventDefault()}>
                           Privacy Policy
                         </a>
